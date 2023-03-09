@@ -26,7 +26,7 @@ func injectSidecar(pod *corev1.Pod) {
 	if pod.Annotations == nil {
 		pod.Annotations = make(map[string]string, 2)
 	}
-	pod.Annotations["sidecar_injected_at"] = time.Now().String()
+	pod.Annotations["sidecar_injected_at"] = time.Now().Format(`2006-01-02T15:04:05Z`)
 	pod.Annotations["sidecar_injected_by"] = "webhook-kb-demo"
 	// TODO 启动顺序控制
 }
