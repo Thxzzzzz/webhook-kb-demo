@@ -49,7 +49,7 @@ func NewPodAnnotatorAdmission(c client.Client) *webhook.Admission {
 	return &webhook.Admission{Handler: NewPodAnnotator(c)}
 }
 
-// podAnnotator adds an annotation to every incoming pods.
+// Handle podAnnotator adds an annotation to every incoming pods.
 func (a *podAnnotator) Handle(ctx context.Context, req admission.Request) admission.Response {
 	pod := &corev1.Pod{}
 
