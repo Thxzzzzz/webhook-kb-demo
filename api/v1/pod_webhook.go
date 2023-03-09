@@ -60,24 +60,9 @@ func (a *podAnnotator) Handle(ctx context.Context, req admission.Request) admiss
 
 	podlog.Info("handling pod", "name", req.Name)
 
-	if pod.Annotations == nil {
-		pod.Annotations = map[string]string{}
-	}
-	podlog.Info("inject pod annotations", "annotations", pod.Annotations)
-	pod.Annotations["example-mutating-admission-webhook"] = "foo"
-
-	if enable, _ := pod.Labels["inject-sidecar"]; enable == "enable" {
+	if shouldInjectSidecar(pod.Labels) {
 		podlog.Info("injecting sidecar into pod", "pod", pod.Name)
-
-		var cns []corev1.Container
-		cns = pod.Spec.Containers
-
-		container := corev1.Container{
-			Name:  "sidecar-nginx",
-			Image: "nginx:1.23.3-alpine",
-		}
-		cns = append(cns, container)
-		pod.Spec.Containers = cns
+		injectSidecar(pod)
 	}
 
 	marshaledPod, err := json.Marshal(pod)
