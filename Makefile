@@ -160,3 +160,6 @@ $(ENVTEST): $(LOCALBIN)
 dev: manifests kustomize
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/dev | kubectl apply -f -
+
+gen-yaml: manifests kustomize
+	$(KUSTOMIZE) build config/default > config/deploy/deploy.yaml

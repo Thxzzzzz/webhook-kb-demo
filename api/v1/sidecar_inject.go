@@ -51,7 +51,7 @@ func getSidecarContainer(holdAppUntilProxyReady bool) (sidecar corev1.Container,
 				// TODO wait until ready
 				Command: []string{
 					"/bin/sh", "-c",
-					` while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:9000/healthz)" != '200' ]]; do echo Waiting for Sidecar;sleep 1; done; echo Sidecar available;`,
+					`while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:9000/healthz)" != '200' ]]; do echo Waiting for Sidecar;sleep 1; done; echo Sidecar available;`,
 				},
 			},
 		},
