@@ -46,7 +46,7 @@ func getSidecarContainer(holdAppUntilProxyReady bool) (sidecar corev1.Container,
 	}
 	injectFront = true
 	sidecar.Lifecycle = &corev1.Lifecycle{
-		PreStop: &corev1.LifecycleHandler{
+		PostStart: &corev1.LifecycleHandler{
 			Exec: &corev1.ExecAction{
 				// TODO wait until ready
 				Command: []string{

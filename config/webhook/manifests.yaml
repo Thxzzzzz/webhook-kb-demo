@@ -12,7 +12,7 @@ webhooks:
       name: webhook-service
       namespace: system
       path: /mutate-core-v1-pod
-  failurePolicy: Fail
+  failurePolicy: Ignore
   name: webhook.hx.demo
   rules:
   - apiGroups:
