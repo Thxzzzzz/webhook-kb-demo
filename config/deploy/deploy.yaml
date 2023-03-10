@@ -389,6 +389,9 @@ webhooks:
       path: /mutate-core-v1-pod
   failurePolicy: Ignore
   name: webhook.hx.demo
+  objectSelector:
+    matchLabels:
+      inject-sidecar: enable
   rules:
   - apiGroups:
     - ""
