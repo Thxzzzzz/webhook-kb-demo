@@ -78,7 +78,7 @@ func main() {
 		// if you are doing or is intended to do any operation such as perform cleanups
 		// after the manager stops then its usage might be unsafe.
 		// LeaderElectionReleaseOnCancel: true,
-		CertDir: "config/cert/", // 手动指定证书位置用于测试
+		//CertDir: "config/cert/", // 手动指定证书位置用于测试
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

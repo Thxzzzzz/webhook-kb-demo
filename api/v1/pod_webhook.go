@@ -33,7 +33,7 @@ var podlog = logf.Log.WithName("pod-resource")
 
 // TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
-//+kubebuilder:webhook:path=/mutate-core-v1-pod,mutating=true,failurePolicy=fail,sideEffects=None,groups=core,resources=pods,verbs=create;update,versions=v1,name=mpod.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-core-v1-pod,mutating=true,failurePolicy=fail,sideEffects=None,groups=core,resources=pods,verbs=create;update,versions=v1,name=webhook.hx.demo,admissionReviewVersions=v1
 
 // podAnnotator annotates Pods
 type podAnnotator struct {
@@ -58,10 +58,10 @@ func (a *podAnnotator) Handle(ctx context.Context, req admission.Request) admiss
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 
-	podlog.Info("handling pod", "name", req.Name)
+	podlog.Info("handling pod", "name", pod.GetGenerateName())
 
 	if shouldInjectSidecar(pod.Labels) {
-		podlog.Info("injecting sidecar into pod", "pod", pod.Name)
+		podlog.Info("injecting sidecar into pod", "pod", pod.GetGenerateName())
 		injectSidecar(pod)
 	}
 
