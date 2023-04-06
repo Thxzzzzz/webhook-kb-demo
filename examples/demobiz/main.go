@@ -8,13 +8,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 func main() {
 	// log with time and line
 	log.SetFlags(log.Lshortfile | log.Ldate | log.Lmicroseconds)
-	log.Println("v2.2")
+	log.Println("v2.3")
 	log.Println("this is biz server")
 
 	sidecarMode := flag.Bool("sidecar", false, "sidecar mode")
@@ -49,6 +50,9 @@ func main() {
 	mux.HandleFunc("/healthz", Ping)
 	log.Println("register route : " + "/healthz")
 
+	mux.HandleFunc("/", Default)
+	log.Println("register route : " + "/")
+
 	log.Print("start serving ... ")
 	err := http.ListenAndServe(":80", mux)
 	if err != nil {
@@ -56,6 +60,36 @@ func main() {
 	}
 
 	log.Print("end serving ... ")
+}
+
+func Default(w http.ResponseWriter, r *http.Request) {
+	// return namespace if in k8s
+	// if in k8s
+	if _, err := os.Stat("/var/run/secrets/kubernetes.io/serviceaccount/namespace"); err == nil {
+		// read namespace
+		namespace, err := os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
+		if err != nil {
+			log.Println("read namespace err : " + err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		content := "this is biz server in k8s, namespace : " + string(namespace)
+		// pod name
+		podName, err := os.Hostname()
+		if err != nil {
+			log.Println("get pod name err : " + err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		content += ", pod name : " + podName
+
+		w.Write([]byte(content))
+		return
+	} else {
+		w.Write([]byte("this is biz server"))
+		return
+	}
+
 }
 
 func checkSidecar() (err error) {
